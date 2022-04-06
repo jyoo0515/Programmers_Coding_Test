@@ -5,37 +5,26 @@
 
 using namespace std;
 
-int M, N;
-int cnt = 0;
+int M, N, cnt, tmp;
 vector<vector<int>> matrix;
 vector<vector<bool>> visited;
-vector<int> arr;
+vector<int> dx, dy;
 
 void dfs(int i, int j)
 {
-    if (visited[i][j])
-        return;
-
     visited[i][j] = true;
-    if (i - 1 >= 0 && matrix[i - 1][j] == matrix[i][j])
+    tmp++;
+
+    for (int k = 0; k < 4; k++)
     {
-        arr[cnt]++;
-        dfs(i - 1, j);
-    }
-    else if (j - 1 >= 0 && matrix[i][j - 1] == matrix[i][j])
-    {
-        arr[cnt]++;
-        dfs(i, j - 1);
-    }
-    else if (i + 1 < M && matrix[i + 1][j] == matrix[i][j])
-    {
-        arr[cnt]++;
-        dfs(i + 1, j);
-    }
-    else if (j + 1 < N && matrix[i][j + 1] == matrix[i][j])
-    {
-        arr[cnt]++;
-        dfs(i, j + 1);
+        int nx = i + dx[k];
+        int ny = j + dy[k];
+
+        if (0 <= nx && 0 <= ny && nx < M && ny < N)
+        {
+            if (matrix[nx][ny] == matrix[i][j] && !visited[nx][ny])
+                dfs(nx, ny);
+        }
     }
 }
 
@@ -44,24 +33,30 @@ vector<int> solution(int m, int n, vector<vector<int>> picture)
 {
     M = m;
     N = n;
+    cnt = 0;
+    tmp = 0;
     visited = vector<vector<bool>>(m, vector<bool>(n, false));
     matrix.assign(picture.begin(), picture.end());
-    arr.resize(m * n + 1);
+    dx = {1, -1, 0, 0};
+    dy = {0, 0, 1, -1};
 
+    int max_area = 0;
     for (int i = 0; i < m; i++)
     {
         for (int j = 0; j < n; j++)
         {
             if (matrix[i][j] > 0 && !visited[i][j])
             {
-                dfs(i, j);
                 cnt++;
+                tmp = 0;
+                dfs(i, j);
+                max_area = max(max_area, tmp);
             }
         }
     }
 
     vector<int> answer(2);
-    answer[0] = cnt + 1;
-    answer[1] = *max_element(arr.begin(), arr.end());
+    answer[0] = cnt;
+    answer[1] = max_area;
     return answer;
 }
