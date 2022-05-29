@@ -1,3 +1,5 @@
+// https://programmers.co.kr/learn/courses/30/lessons/43162
+
 class Solution {
     void dfs(int[][] computers, boolean[] visited, int cur) {
         visited[cur] = true;
