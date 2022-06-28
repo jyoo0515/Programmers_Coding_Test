@@ -10,3 +10,7 @@ def solution(price, money, count):
         answer = sum - money
 
     return answer
+
+
+# def solution(price, money, count):
+#     return max(0,price*(count+1)*count//2-money)
